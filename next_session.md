@@ -7,12 +7,12 @@ Verificar que todos los componentes de ARIA Demo funcionan correctamente.
 
 ## Checklist de Testing
 
-### 1. Server MJPEG (Principal)
+### 1. Server MJPEG
 
 ```bash
 cd /home/robert/Projects/aria/aria-demo
 source .venv/bin/activate
-python server.py test_video.mp4
+python main.py test_video.mp4
 ```
 
 **Verificar:**
@@ -32,33 +32,10 @@ python server.py test_video.mp4
 - [ ] Objetos "very_close" generan beeps más fuertes
 - [ ] TTS anuncia objetos peligrosos no vistos
 
-### 3. Demo con Gradio
+### 3. Webcam (si disponible)
 
 ```bash
-python demo.py --video test_video.mp4
-```
-
-**Verificar:**
-- [ ] Gradio abre en localhost:7860
-- [ ] Botones Start/Stop funcionan
-- [ ] Botón "Scan Scene" anuncia objetos
-- [ ] Todos los paneles muestran contenido
-
-### 4. Demo con OpenCV
-
-```bash
-python demo.py --video test_video.mp4 --opencv
-```
-
-**Verificar:**
-- [ ] Ventana OpenCV se abre
-- [ ] Tecla 'q' cierra la aplicación
-- [ ] Tecla 's' hace scan de escena
-
-### 5. Webcam (si disponible)
-
-```bash
-python demo.py --webcam
+python main.py
 ```
 
 **Verificar:**
@@ -95,13 +72,7 @@ sudo apt-get install -y libportaudio2 portaudio19-dev
 nvidia-smi
 
 # Ver logs del servidor
-python server.py test_video.mp4 2>&1 | tee server.log
-
-# Probar solo detección (sin audio)
-python demo.py --video test_video.mp4 --no-audio
-
-# Probar sin profundidad (más rápido)
-python demo.py --video test_video.mp4 --no-depth
+python main.py test_video.mp4 2>&1 | tee server.log
 ```
 
 ---
@@ -134,7 +105,7 @@ Integrar FastVLM de aria-scene para descripciones detalladas + control por voz.
 | `scene_describer.py` | CREAR | Wrapper FastVLM (lazy load) |
 | `voice_control.py` | CREAR | Whisper/Vosk para comandos de voz |
 | `detector.py` | MODIFICAR | Añadir `describe_scene()` |
-| `server.py` | MODIFICAR | Endpoint `/scan`, botón UI |
+| `main.py` | MODIFICAR | Endpoint `/scan`, botón UI |
 | `audio.py` | MODIFICAR | Método para TTS largo |
 
 ### Comandos de Voz
