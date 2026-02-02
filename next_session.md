@@ -19,10 +19,15 @@ python main.py test_video.mp4
 - [ ] Servidor arranca en http://localhost:5000
 - [ ] Video RGB muestra detecciones con bounding boxes
 - [ ] Mapa de profundidad se renderiza correctamente
-- [ ] FPS estable entre 15-20
+- [ ] FPS estable entre 15-20 (PyTorch) o 25-30 (TensorRT)
 - [ ] Panel de status actualiza en tiempo real
 - [ ] Objetos cercanos tienen colores rojos/naranjas
 - [ ] Objetos lejanos tienen colores verdes
+
+**Verificar GPU optimizations (en logs):**
+- [ ] `[DETECTOR] yolo26s cargado (TensorRT)` o `(CUDA PyTorch)`
+- [ ] `[DETECTOR] Depth Anything V2 (TensorRT)` o `(torch.compile)` o `(FP16)`
+- [ ] `[DETECTOR] OpenCV CUDA disponible` (opcional)
 
 ### 2. Audio Espacial
 
@@ -54,6 +59,12 @@ sudo apt-get install -y libportaudio2 portaudio19-dev
 ### CUDA out of memory
 - Reiniciar el proceso
 - Cerrar otras aplicaciones que usen GPU
+
+### TensorRT no disponible
+```bash
+pip install tensorrt torch-tensorrt
+```
+Primera ejecución exporta yolo26s.engine (~30s), luego carga rápido.
 
 ### Video corre muy rápido
 - Verificar que observer.py tiene frame rate limiting
