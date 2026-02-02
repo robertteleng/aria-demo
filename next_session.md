@@ -106,7 +106,70 @@ python demo.py --video test_video.mp4 --no-depth
 
 ---
 
-## Mejoras Futuras (Ideas)
+## PRÓXIMA FEATURE: VLM + Voz
+
+Integrar FastVLM de aria-scene para descripciones detalladas + control por voz.
+
+### Arquitectura
+
+```
+┌─────────────────────────────────────────────────────┐
+│              aria-demo (real-time ~20 FPS)          │
+├─────────────────────────────────────────────────────┤
+│  YOLO → Detections → Beeps (continuo)               │
+│  Depth → Distance                                   │
+│  Gaze → is_gazed                                    │
+├─────────────────────────────────────────────────────┤
+│  [Voz: "describe" / Botón Scan / Tecla 's']         │
+│            ↓                                        │
+│  FastVLM-0.5B → Descripción rica → TTS              │
+│            (~400ms, on-demand)                      │
+└─────────────────────────────────────────────────────┘
+```
+
+### Archivos a Crear/Modificar
+
+| Archivo | Acción | Descripción |
+|---------|--------|-------------|
+| `scene_describer.py` | CREAR | Wrapper FastVLM (lazy load) |
+| `voice_control.py` | CREAR | Whisper/Vosk para comandos de voz |
+| `detector.py` | MODIFICAR | Añadir `describe_scene()` |
+| `server.py` | MODIFICAR | Endpoint `/scan`, botón UI |
+| `audio.py` | MODIFICAR | Método para TTS largo |
+
+### Comandos de Voz
+
+| Comando | Acción |
+|---------|--------|
+| "describe" / "scan" | Descripción VLM de la escena |
+| "stop" | Pausar alertas |
+| "resume" | Reanudar alertas |
+| "help" | Listar comandos |
+
+### Dependencias Adicionales
+
+```bash
+# Whisper para reconocimiento de voz
+pip install openai-whisper
+# o Vosk (offline, más ligero)
+pip install vosk
+```
+
+### VRAM Estimado
+
+| Modelo | VRAM |
+|--------|------|
+| YOLO26s | ~0.5GB |
+| Depth Anything V2 | ~0.8GB |
+| Meta Gaze | ~0.2GB |
+| FastVLM-0.5B | ~1.2GB |
+| **Total** | **~2.7GB** |
+
+RTX 3090 (24GB) → OK
+
+---
+
+## Otras Mejoras Futuras
 
 1. **Grabación**: Añadir botón para grabar sesión
 2. **Configuración**: Archivo config.yaml para ajustar parámetros
